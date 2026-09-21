@@ -2927,9 +2927,12 @@
         async function stage6(S) {
             send_notification("Stage 6\nResolve kernel data_base");
 
-            if (S.OFF.DATA_BASE_ALLPROC == null) {
+            if (S.OFF.DATA_BASE_ALLPROC == null ||
+                S.OFF.DATA_BASE_SECURITY_FLAGS == null ||
+                S.OFF.DATA_BASE_KERNEL_PMAP_STORE == null ||
+                S.OFF.DATA_BASE_GVMSPACE == null) {
                 S.data_base_ok = false;
-                await ulog("stage6: DATA_BASE_ALLPROC missing for FW " + FW_VERSION +
+                await ulog("stage6: kernel data-base anchors missing for FW " + FW_VERSION +
                     " - skipping data_base resolve and elf loader (jailbreak is done)");
                 return;
             }
