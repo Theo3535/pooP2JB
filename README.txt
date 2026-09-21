@@ -7,7 +7,7 @@ LAN IPs or hostnames anywhere in the site.
 FIRMWARE SUPPORT
 ----------------
   Poopsploit   9.00 - 12.00   (IPv6 rthdr UAF)
-  P2JB        12.00 - 12.70   (cr_ref overflow via kqueueex; ~1 hour leak)
+  P2JB        12.00 - 13.20   (cr_ref overflow via kqueueex; ~1 hour leak)
 index.html detects the console firmware and greys out whichever exploit cannot run.
 Both are selectable on 12.00, the one firmware they overlap on.
 
@@ -58,7 +58,7 @@ the site works on a plain static host - with one real limitation, stated honestl
 CONTENTS
 --------
   index.html            entry point, firmware gating
-  p2jb.html / p2jb.js   p2jb exploit (12.00-12.70)
+  p2jb.html / p2jb.js   p2jb exploit (12.00-13.20)
   poops.html / poops.js poopsploit (9.00-12.00)
   main.js core.js mem.js rop.js int64.js syscalls.js             shared engine
   rop-worker.js rop_slave.js p2jb_lk.js p2jb_poops.js           p2jb sync executor

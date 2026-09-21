@@ -231,6 +231,21 @@
                 DATA_BASE_KERNEL_PMAP_STORE: 0x02E1CFB8n,
                 DATA_BASE_GVMSPACE: 0x02E7E570n
             },
+            // 13.xx currently ships WebKit/libkernel userland offsets but not the four
+            // kernel data-base anchors used by stage6/kexp. Keep these explicit nulls so
+            // the jailbreak path runs and stage6/elfldr cleanly self-disable.
+            "13.00": {
+                DATA_BASE_ALLPROC: null,
+                DATA_BASE_SECURITY_FLAGS: null,
+                DATA_BASE_KERNEL_PMAP_STORE: null,
+                DATA_BASE_GVMSPACE: null
+            },
+            "13.20": {
+                DATA_BASE_ALLPROC: null,
+                DATA_BASE_SECURITY_FLAGS: null,
+                DATA_BASE_KERNEL_PMAP_STORE: null,
+                DATA_BASE_GVMSPACE: null
+            },
         };
         const FW_ALIAS_P2JB = {
             "9.00": "9.00",
@@ -2911,6 +2926,13 @@
 
         async function stage6(S) {
             send_notification("Stage 6\nResolve kernel data_base");
+
+            if (!S.OFF.DATA_BASE_ALLPROC) {
+                S.data_base_ok = false;
+                await ulog("stage6: DATA_BASE_ALLPROC missing for FW " + FW_VERSION +
+                    " - skipping data_base resolve and elf loader (jailbreak is done)");
+                return;
+            }
 
             const KDATA_MASK = 0xffff804000000000n;
             let p = S.curproc, allproc = 0n;

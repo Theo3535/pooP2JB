@@ -6,7 +6,7 @@ greys out whichever exploit cannot run.
 | exploit    | firmware      | technique                              |
 |------------|---------------|----------------------------------------|
 | Poopsploit | 9.00 – 12.00  | IPv6 `rthdr` UAF                       |
-| P2JB       | 12.00 – 12.70 | `cr_ref` overflow via `kqueueex` (~1 h) |
+| P2JB       | 12.00 – 13.20 | `cr_ref` overflow via `kqueueex` (~1 h) |
 
 12.00 is the one firmware both cover.
 
