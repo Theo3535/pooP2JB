@@ -2927,7 +2927,7 @@
         async function stage6(S) {
             send_notification("Stage 6\nResolve kernel data_base");
 
-            if (!S.OFF.DATA_BASE_ALLPROC) {
+            if (S.OFF.DATA_BASE_ALLPROC == null) {
                 S.data_base_ok = false;
                 await ulog("stage6: DATA_BASE_ALLPROC missing for FW " + FW_VERSION +
                     " - skipping data_base resolve and elf loader (jailbreak is done)");
