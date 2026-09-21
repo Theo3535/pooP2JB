@@ -2933,9 +2933,13 @@
                 S.OFF.DATA_BASE_GVMSPACE == null) {
                 S.data_base_ok = false;
                 S.data_base = null;
-                await ulog("stage6: kernel data-base anchors missing for FW " + FW_VERSION +
-                    " - skipping data_base resolve and elf loader (jailbreak is done)");
-                return;
+                if (/^13\./.test(FW_VERSION)) {
+                    await ulog("stage6: 13.xx kernel data-base anchors missing for FW " + FW_VERSION +
+                        " - skipping data_base resolve and elf loader (jailbreak is done)");
+                    return;
+                }
+                throw new Error("stage6: kernel data-base anchors missing for unsupported FW " +
+                    FW_VERSION + " (expected only on 13.xx partial-support path)");
             }
 
             const KDATA_MASK = 0xffff804000000000n;
