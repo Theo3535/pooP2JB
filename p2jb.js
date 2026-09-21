@@ -261,6 +261,7 @@
             let key = FW_VERSION;
             if (FW_ALIAS_P2JB[key]) key = FW_ALIAS_P2JB[key];
             let fw = FW_OFFSETS_P2JB[key];
+            const allow_partial_kernel_data = (key === "13.00" || key === "13.20");
             if (!fw) {
                 // DO NOT fall back to major+".00" for KERNEL DATA offsets. Userland
                 // offsets are safe to inherit across minors, but allproc/security_flags/
@@ -311,6 +312,7 @@
                 DATA_BASE_TARGET_ID: fw.DATA_BASE_SECURITY_FLAGS ? fw.DATA_BASE_SECURITY_FLAGS + 0x09n : null,
                 DATA_BASE_QA_FLAGS: fw.DATA_BASE_SECURITY_FLAGS ? fw.DATA_BASE_SECURITY_FLAGS + 0x24n : null,
                 DATA_BASE_UTOKEN_FLAGS: fw.DATA_BASE_SECURITY_FLAGS ? fw.DATA_BASE_SECURITY_FLAGS + 0x8Cn : null,
+                ALLOW_PARTIAL_KERNEL_DATA: allow_partial_kernel_data,
             };
         }
 
@@ -2933,7 +2935,7 @@
                 S.OFF.DATA_BASE_GVMSPACE == null) {
                 S.data_base_ok = false;
                 S.data_base = null;
-                if (/^13\./.test(FW_VERSION)) {
+                if (S.OFF.ALLOW_PARTIAL_KERNEL_DATA) {
                     await ulog("stage6: 13.xx kernel data-base anchors missing for FW " + FW_VERSION +
                         " - skipping data_base resolve and elf loader (jailbreak is done)");
                     return;
