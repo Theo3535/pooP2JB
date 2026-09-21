@@ -231,21 +231,6 @@
                 DATA_BASE_KERNEL_PMAP_STORE: 0x02E1CFB8n,
                 DATA_BASE_GVMSPACE: 0x02E7E570n
             },
-            // 13.xx currently ships WebKit/libkernel userland offsets but not the four
-            // kernel data-base anchors used by stage6/kexp. Keep these explicit nulls so
-            // the jailbreak path runs and stage6/elfldr cleanly self-disable.
-            "13.00": {
-                DATA_BASE_ALLPROC: null,
-                DATA_BASE_SECURITY_FLAGS: null,
-                DATA_BASE_KERNEL_PMAP_STORE: null,
-                DATA_BASE_GVMSPACE: null
-            },
-            "13.20": {
-                DATA_BASE_ALLPROC: null,
-                DATA_BASE_SECURITY_FLAGS: null,
-                DATA_BASE_KERNEL_PMAP_STORE: null,
-                DATA_BASE_GVMSPACE: null
-            },
         };
         const FW_ALIAS_P2JB = {
             "9.00": "9.00",
@@ -263,6 +248,12 @@
             let fw = FW_OFFSETS_P2JB[key];
             const allow_partial_kernel_data = (key === "13.00" || key === "13.20");
             if (!fw) {
+                if (allow_partial_kernel_data) {
+                    // 13.xx currently ships WebKit/libkernel userland offsets but not the
+                    // four kernel data-base anchors used by stage6/kexp. Keep userland
+                    // running and let stage6/elfldr self-disable from null anchors below.
+                    fw = {};
+                } else {
                 // DO NOT fall back to major+".00" for KERNEL DATA offsets. Userland
                 // offsets are safe to inherit across minors, but allproc/security_flags/
                 // pmap_store/gvmspace MOVE between minor kernels — using 12.00 values on
@@ -273,6 +264,7 @@
                     + FW_VERSION + "\"]: DATA_BASE_ALLPROC, DATA_BASE_SECURITY_FLAGS, "
                     + "DATA_BASE_KERNEL_PMAP_STORE, DATA_BASE_GVMSPACE. "
                     + "(Refusing the major.00 fallback - wrong kernel offsets = panic.)");
+                }
             }
 
             kernel_offset = {
