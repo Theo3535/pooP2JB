@@ -6,9 +6,12 @@ greys out whichever exploit cannot run.
 | exploit    | firmware      | technique                              |
 |------------|---------------|----------------------------------------|
 | Poopsploit | 9.00 – 12.00  | IPv6 `rthdr` UAF                       |
-| P2JB       | 12.00 – 12.70 | `cr_ref` overflow via `kqueueex` (~1 h) |
+| P2JB       | 12.00 – 13.20 | `cr_ref` overflow via `kqueueex` (~1 h) |
 
 12.00 is the one firmware both cover.
+
+On 13.xx, P2JB runs the jailbreak path but stage6/kernel `data_base` resolve and
+`elfldr` handoff are intentionally skipped until 13.xx kernel data offsets are added.
 
 ## Hosting
 

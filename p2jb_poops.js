@@ -300,7 +300,7 @@
                 mov_qword_rdi_rax: G8("mov [rdi], rax"),
                 // WEBKIT pop rsp: `5C C3` was removed from libkernel_web in 12.xx, so
                 // rop-worker's kbase pop_rsp is unavailable there. libSceNKWebKit still
-                // has one (verified 12.00-12.70). rop-worker g() prefers this.
+                // has one (verified 12.00-13.20). rop-worker g() prefers this.
                 pop_rsp: G8("pop rsp"),
             },
             lk: lk || {},                                 // {} -> rop-worker's 10.00 defaults (wrong on 12.xx)
@@ -513,5 +513,5 @@
     try { ensureRopWorker(); } catch (e) {
         (P.jbmark || function () { })("EAGER-INIT-ERR", String(e && e.message).slice(0, 90));
     }
-    P.log("[p2jb_poops] Y2JB adapter bound on poopsploit (gadgets 12.00-12.70, async syscall).");
+    P.log("[p2jb_poops] Y2JB adapter bound on poopsploit (gadgets 12.00-13.20, async syscall).");
 })(typeof window !== "undefined" ? window : globalThis);

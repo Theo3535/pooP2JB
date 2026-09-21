@@ -246,7 +246,14 @@
             let key = FW_VERSION;
             if (FW_ALIAS_P2JB[key]) key = FW_ALIAS_P2JB[key];
             let fw = FW_OFFSETS_P2JB[key];
+            const allow_partial_kernel_data = (key === "13.00" || key === "13.20");
             if (!fw) {
+                if (allow_partial_kernel_data) {
+                    // 13.xx currently ships WebKit/libkernel userland offsets but not the
+                    // four kernel data-base anchors used by stage6/kexp. Keep userland
+                    // running and let stage6/elfldr self-disable from null anchors below.
+                    fw = {};
+                } else {
                 // DO NOT fall back to major+".00" for KERNEL DATA offsets. Userland
                 // offsets are safe to inherit across minors, but allproc/security_flags/
                 // pmap_store/gvmspace MOVE between minor kernels — using 12.00 values on
@@ -257,6 +264,7 @@
                     + FW_VERSION + "\"]: DATA_BASE_ALLPROC, DATA_BASE_SECURITY_FLAGS, "
                     + "DATA_BASE_KERNEL_PMAP_STORE, DATA_BASE_GVMSPACE. "
                     + "(Refusing the major.00 fallback - wrong kernel offsets = panic.)");
+                }
             }
 
             kernel_offset = {
@@ -296,6 +304,7 @@
                 DATA_BASE_TARGET_ID: fw.DATA_BASE_SECURITY_FLAGS ? fw.DATA_BASE_SECURITY_FLAGS + 0x09n : null,
                 DATA_BASE_QA_FLAGS: fw.DATA_BASE_SECURITY_FLAGS ? fw.DATA_BASE_SECURITY_FLAGS + 0x24n : null,
                 DATA_BASE_UTOKEN_FLAGS: fw.DATA_BASE_SECURITY_FLAGS ? fw.DATA_BASE_SECURITY_FLAGS + 0x8Cn : null,
+                ALLOW_PARTIAL_KERNEL_DATA: allow_partial_kernel_data,
             };
         }
 
@@ -2912,6 +2921,21 @@
         async function stage6(S) {
             send_notification("Stage 6\nResolve kernel data_base");
 
+            if (S.OFF.DATA_BASE_ALLPROC == null ||
+                S.OFF.DATA_BASE_SECURITY_FLAGS == null ||
+                S.OFF.DATA_BASE_KERNEL_PMAP_STORE == null ||
+                S.OFF.DATA_BASE_GVMSPACE == null) {
+                S.data_base_ok = false;
+                S.data_base = null;
+                if (S.OFF.ALLOW_PARTIAL_KERNEL_DATA) {
+                    await ulog("stage6: 13.xx kernel data-base anchors missing for FW " + FW_VERSION +
+                        " - skipping data_base resolve and elf loader (jailbreak is done)");
+                    return;
+                }
+                throw new Error("stage6: kernel data-base anchors missing for unsupported FW " +
+                    FW_VERSION + " (expected only on 13.xx partial-support path)");
+            }
+
             const KDATA_MASK = 0xffff804000000000n;
             let p = S.curproc, allproc = 0n;
             for (let i = 0; i < 64; i++) {
@@ -2923,6 +2947,7 @@
             }
             if (allproc === 0n) {
                 S.data_base_ok = false;
+                S.data_base = null;
                 await ulog("stage6: allproc not found - elf loader skipped " +
                     "(jailbreak is done)");
                 return;

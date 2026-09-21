@@ -78,7 +78,7 @@ or the page dying with no PREFLIGHT lines at all. Report the last line either wa
 <tbody id="rows"></tbody>
 </table>
 
-<p id="foot">p2jb covers 12.00&ndash;12.70. Poopsploit (9.00&ndash;12.00) is a separate page.</p>
+<p id="foot">p2jb covers 12.00&ndash;13.20. On 13.xx, jailbreak stages run but stage6/elfldr is skipped pending kernel data offsets. Poopsploit (9.00&ndash;12.00) is a separate page.</p>
 
 </div>
 
@@ -112,13 +112,13 @@ var RESULTS = [
         here = m[1] + "." + m[2];
         var num = parseInt(m[1], 10) * 100 + parseInt(m[2], 10);
         fwEl.textContent = "firmware " + here;
-        if (num >= 1200 && num <= 1270) {
+        if (num >= 1200 && num <= 1320) {
             btn.className = "btn";
             btn.setAttribute("tabindex", "0");
             noteEl.textContent = "in range for p2jb - preflight is safe to run";
             try { btn.focus(); } catch (e) { }
         } else {
-            noteEl.textContent = "outside p2jb's 12.00-12.70 range - nothing to preflight here";
+            noteEl.textContent = "outside p2jb's 12.00-13.20 range - nothing to preflight here";
         }
     }
 
