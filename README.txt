@@ -10,6 +10,8 @@ FIRMWARE SUPPORT
   P2JB        12.00 - 13.20   (cr_ref overflow via kqueueex; ~1 hour leak)
 index.html detects the console firmware and greys out whichever exploit cannot run.
 Both are selectable on 12.00, the one firmware they overlap on.
+On 13.xx, p2jb runs the jailbreak path but stage6 data_base resolve and elfldr
+handoff are skipped until 13.xx kernel data offsets are added.
 
 Verified on hardware: 12.00 (both exploits) and 12.70 (p2jb, full chain to elfldr).
 Every offsets file in both ranges was checked against that firmware's own decrypted

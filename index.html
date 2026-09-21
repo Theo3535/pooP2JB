@@ -155,9 +155,13 @@ var RANGES = {
         }
     }
     if (msg) {
-        msg.textContent = usable.length
-            ? "firmware " + fw
-            : "firmware " + fw + " — not supported (Poopsploit 9.00-12.00, P2JB 12.00-13.20)";
+        if (!usable.length) {
+            msg.textContent = "firmware " + fw + " — not supported (Poopsploit 9.00-12.00, P2JB 12.00-13.20)";
+        } else if (num >= 1300 && num <= 1320) {
+            msg.textContent = "firmware " + fw + " — P2JB jailbreak path available; stage6/elfldr is disabled (missing 13.xx kernel data offsets)";
+        } else {
+            msg.textContent = "firmware " + fw;
+        }
     }
     // focus whichever entry is actually usable
     var first = document.querySelector(".btn:not(.disabled)");

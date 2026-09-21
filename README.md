@@ -10,6 +10,9 @@ greys out whichever exploit cannot run.
 
 12.00 is the one firmware both cover.
 
+On 13.xx, P2JB runs the jailbreak path but stage6/kernel `data_base` resolve and
+`elfldr` handoff are intentionally skipped until 13.xx kernel data offsets are added.
+
 ## Hosting
 
 Serve the directory. No build step. Works at a domain root **or in a subdirectory**
