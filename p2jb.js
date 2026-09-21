@@ -2932,6 +2932,7 @@
                 S.OFF.DATA_BASE_KERNEL_PMAP_STORE == null ||
                 S.OFF.DATA_BASE_GVMSPACE == null) {
                 S.data_base_ok = false;
+                S.data_base = null;
                 await ulog("stage6: kernel data-base anchors missing for FW " + FW_VERSION +
                     " - skipping data_base resolve and elf loader (jailbreak is done)");
                 return;
@@ -2948,6 +2949,7 @@
             }
             if (allproc === 0n) {
                 S.data_base_ok = false;
+                S.data_base = null;
                 await ulog("stage6: allproc not found - elf loader skipped " +
                     "(jailbreak is done)");
                 return;
